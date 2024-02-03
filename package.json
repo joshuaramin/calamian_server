@@ -4,6 +4,7 @@
    "description": "",
    "main": "index.js",
    "scripts": {
+      "postinstall": "npx prisma generate --schema=./src/prisma/schema.prisma",
       "start": "npx tsx src/server.ts",
       "dev": "nodemon"
    },
