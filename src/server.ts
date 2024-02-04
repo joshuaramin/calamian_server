@@ -76,7 +76,7 @@ const { makeSchema, declarativeWrappingPlugin } = Nexus;
 
     app.use("/graphql", cors<cors.CorsRequest>({
         credentials: true,
-        origin: [ "https://studio.apollographql.com", "http://localhost:3000", "calamianmdspharmacy.vercel.app" ]
+        origin: [ "https://studio.apollographql.com", "http://localhost:3000", "https://calamianmdspharmacy.vercel.app" ]
     }), json(), expressMiddleware(server, {
         context: async ({ req, res }) => ({ req, res })
     }))
