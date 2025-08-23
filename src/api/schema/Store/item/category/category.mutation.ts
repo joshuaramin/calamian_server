@@ -31,7 +31,7 @@ export const CategoryMutation = extendType({
                     }
                 })
 
-                pubsub.publish("createCategory", categories)
+                pubsub.publish("createCategory", categories);
 
                 return categories
             }

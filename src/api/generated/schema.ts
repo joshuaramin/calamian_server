@@ -52,6 +52,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  AuthInput: { // input type
+    email?: string | null; // String
+    password?: string | null; // String
+  }
   expenseInput: { // input type
     amount?: number | null; // Float
     expense?: string | null; // String
@@ -76,13 +80,13 @@ export interface NexusGenInputs {
     firstname?: string | null; // String
     lastname?: string | null; // String
     phone?: NexusGenScalars['PhoneNumber'] | null; // PhoneNumber
+    role?: string | null; // String
     salary?: number | null; // Float
   }
 }
 
 export interface NexusGenEnums {
   role: "admin" | "manager" | "staff"
-  tab: "category" | "expFolder" | "item" | "user"
 }
 
 export interface NexusGenScalars {
@@ -98,6 +102,9 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  ErrorObject: { // root type
+    message?: string | null; // String
+  }
   Mutation: {};
   OrderTotal: { // root type
     date?: string | null; // String
@@ -105,12 +112,6 @@ export interface NexusGenObjects {
   }
   Query: {};
   Subscription: {};
-  archive: { // root type
-    archive?: boolean | null; // Boolean
-    archiveID?: string | null; // ID
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-  }
   category: { // root type
     category?: string | null; // String
     categoryID?: string | null; // ID
@@ -180,6 +181,7 @@ export interface NexusGenObjects {
   }
   token: { // root type
     token?: string | null; // String
+    user?: NexusGenRootTypes['user'] | null; // user
   }
   user: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -195,34 +197,34 @@ export interface NexusGenInterfaces {
 }
 
 export interface NexusGenUnions {
+  AuthPayload: NexusGenRootTypes['ErrorObject'] | NexusGenRootTypes['token'];
+  UserPaylaod: NexusGenRootTypes['ErrorObject'] | NexusGenRootTypes['user'];
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenObjects & NexusGenUnions
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  ErrorObject: { // field return type
+    message: string | null; // String
+  }
   Mutation: { // field return type
     createAnOrder: NexusGenRootTypes['order'] | null; // order
     createCategory: NexusGenRootTypes['category'] | null; // category
-    createCategoryArchive: NexusGenRootTypes['archive'] | null; // archive
     createExpense: NexusGenRootTypes['expenses'] | null; // expenses
     createExpenseFolder: NexusGenRootTypes['expenseFolder'] | null; // expenseFolder
-    createExpenseFolderArchive: NexusGenRootTypes['archive'] | null; // archive
-    createItemArchive: NexusGenRootTypes['archive'] | null; // archive
     createMedicalItems: NexusGenRootTypes['item'] | null; // item
     createNotificationSystem: NexusGenRootTypes['notification'] | null; // notification
-    createUserAccount: NexusGenRootTypes['user'] | null; // user
-    createUserArchive: NexusGenRootTypes['archive'] | null; // archive
+    createUserAccount: NexusGenRootTypes['UserPaylaod'] | null; // UserPaylaod
     deleteCategory: NexusGenRootTypes['category'] | null; // category
     deleteExpFolder: NexusGenRootTypes['expenseFolder'] | null; // expenseFolder
     deleteExpense: Array<NexusGenRootTypes['expenses'] | null> | null; // [expenses]
     deleteMedicalItem: NexusGenRootTypes['item'] | null; // item
     deleteUserAccount: NexusGenRootTypes['user'] | null; // user
     generateOrderReport: Array<NexusGenRootTypes['order'] | null> | null; // [order]
-    login: NexusGenRootTypes['token'] | null; // token
+    login: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     resetUserPasswordToDefault: NexusGenRootTypes['user'] | null; // user
-    updateArchive: NexusGenRootTypes['archive'] | null; // archive
     updateCategory: NexusGenRootTypes['category'] | null; // category
     updateExpense: NexusGenRootTypes['expenses'] | null; // expenses
     updateExpenseFolder: NexusGenRootTypes['expenseFolder'] | null; // expenseFolder
@@ -238,7 +240,6 @@ export interface NexusGenFieldTypes {
     total: number | null; // Int
   }
   Query: { // field return type
-    getAllArchiveByTab: Array<NexusGenRootTypes['archive'] | null> | null; // [archive]
     getAllCategory: Array<NexusGenRootTypes['category'] | null> | null; // [category]
     getAllExpense: Array<NexusGenRootTypes['expenses'] | null> | null; // [expenses]
     getAllExpenseByGroup: Array<NexusGenRootTypes['expenses'] | null> | null; // [expenses]
@@ -260,32 +261,19 @@ export interface NexusGenFieldTypes {
     getLogByUserId: Array<NexusGenRootTypes['logs'] | null> | null; // [logs]
     getOrderById: Array<NexusGenRootTypes['order'] | null> | null; // [order]
     getProfileByUserId: Array<NexusGenRootTypes['profile'] | null> | null; // [profile]
-    getSearchByFolderName: Array<NexusGenRootTypes['expenseFolder'] | null> | null; // [expenseFolder]
     getSearchByUser: Array<NexusGenRootTypes['user'] | null> | null; // [user]
-    getSearchCategory: Array<NexusGenRootTypes['category'] | null> | null; // [category]
     getTotalNoOfItems: number | null; // Int
     getTotalNoOfOrders: number | null; // Int
     getTotalRevenue: number | null; // Float
     getUserById: Array<NexusGenRootTypes['user'] | null> | null; // [user]
   }
   Subscription: { // field return type
-    archiveSubscriptions: NexusGenRootTypes['archive'] | null; // archive
     categorySubscriptions: NexusGenRootTypes['category'] | null; // category
     createItemSubscriptions: NexusGenRootTypes['item'] | null; // item
     createOrders: NexusGenRootTypes['order'] | null; // order
     createUserSubscriptions: NexusGenRootTypes['user'] | null; // user
     expenseFolderSubscriptions: NexusGenRootTypes['expenseFolder'] | null; // expenseFolder
     expensesSubscriptions: NexusGenRootTypes['expenses'] | null; // expenses
-  }
-  archive: { // field return type
-    archive: boolean | null; // Boolean
-    archiveID: string | null; // ID
-    categories: Array<NexusGenRootTypes['category'] | null> | null; // [category]
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
-    expenseFolder: Array<NexusGenRootTypes['expenseFolder'] | null> | null; // [expenseFolder]
-    items: Array<NexusGenRootTypes['item'] | null> | null; // [item]
-    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-    user: Array<NexusGenRootTypes['user'] | null> | null; // [user]
   }
   category: { // field return type
     category: string | null; // String
@@ -367,42 +355,41 @@ export interface NexusGenFieldTypes {
   }
   token: { // field return type
     token: string | null; // String
+    user: NexusGenRootTypes['user'] | null; // user
   }
   user: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     email: NexusGenScalars['EmailAddress'] | null; // EmailAddress
     logs: Array<NexusGenRootTypes['logs'] | null> | null; // [logs]
-    myProfile: Array<NexusGenRootTypes['profile'] | null> | null; // [profile]
+    myProfile: NexusGenRootTypes['profile'] | null; // profile
     password: string | null; // String
     role: string | null; // String
-    salary: Array<NexusGenRootTypes['salary'] | null> | null; // [salary]
+    salary: NexusGenRootTypes['salary'] | null; // salary
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     userID: string | null; // ID
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  ErrorObject: { // field return type name
+    message: 'String'
+  }
   Mutation: { // field return type name
     createAnOrder: 'order'
     createCategory: 'category'
-    createCategoryArchive: 'archive'
     createExpense: 'expenses'
     createExpenseFolder: 'expenseFolder'
-    createExpenseFolderArchive: 'archive'
-    createItemArchive: 'archive'
     createMedicalItems: 'item'
     createNotificationSystem: 'notification'
-    createUserAccount: 'user'
-    createUserArchive: 'archive'
+    createUserAccount: 'UserPaylaod'
     deleteCategory: 'category'
     deleteExpFolder: 'expenseFolder'
     deleteExpense: 'expenses'
     deleteMedicalItem: 'item'
     deleteUserAccount: 'user'
     generateOrderReport: 'order'
-    login: 'token'
+    login: 'AuthPayload'
     resetUserPasswordToDefault: 'user'
-    updateArchive: 'archive'
     updateCategory: 'category'
     updateExpense: 'expenses'
     updateExpenseFolder: 'expenseFolder'
@@ -418,7 +405,6 @@ export interface NexusGenFieldTypeNames {
     total: 'Int'
   }
   Query: { // field return type name
-    getAllArchiveByTab: 'archive'
     getAllCategory: 'category'
     getAllExpense: 'expenses'
     getAllExpenseByGroup: 'expenses'
@@ -440,32 +426,19 @@ export interface NexusGenFieldTypeNames {
     getLogByUserId: 'logs'
     getOrderById: 'order'
     getProfileByUserId: 'profile'
-    getSearchByFolderName: 'expenseFolder'
     getSearchByUser: 'user'
-    getSearchCategory: 'category'
     getTotalNoOfItems: 'Int'
     getTotalNoOfOrders: 'Int'
     getTotalRevenue: 'Float'
     getUserById: 'user'
   }
   Subscription: { // field return type name
-    archiveSubscriptions: 'archive'
     categorySubscriptions: 'category'
     createItemSubscriptions: 'item'
     createOrders: 'order'
     createUserSubscriptions: 'user'
     expenseFolderSubscriptions: 'expenseFolder'
     expensesSubscriptions: 'expenses'
-  }
-  archive: { // field return type name
-    archive: 'Boolean'
-    archiveID: 'ID'
-    categories: 'category'
-    createdAt: 'DateTime'
-    expenseFolder: 'expenseFolder'
-    items: 'item'
-    updatedAt: 'DateTime'
-    user: 'user'
   }
   category: { // field return type name
     category: 'String'
@@ -547,6 +520,7 @@ export interface NexusGenFieldTypeNames {
   }
   token: { // field return type name
     token: 'String'
+    user: 'user'
   }
   user: { // field return type name
     createdAt: 'DateTime'
@@ -570,10 +544,6 @@ export interface NexusGenArgTypes {
       category: string; // String!
       userID: string; // ID!
     }
-    createCategoryArchive: { // args
-      categoryID: string; // ID!
-      userID: string; // ID!
-    }
     createExpense: { // args
       expFolderID: string; // ID!
       expenses?: NexusGenInputs['expenseInput'] | null; // expenseInput
@@ -582,26 +552,13 @@ export interface NexusGenArgTypes {
       exFolder: string; // String!
       userID: string; // ID!
     }
-    createExpenseFolderArchive: { // args
-      expFolderID: string; // ID!
-      userID: string; // ID!
-    }
-    createItemArchive: { // args
-      itemsID: string; // ID!
-      userID: string; // ID!
-    }
     createMedicalItems: { // args
       categoryID: string; // ID!
       items?: NexusGenInputs['itemInput'] | null; // itemInput
       userID: string; // ID!
     }
     createUserAccount: { // args
-      role: NexusGenEnums['role']; // role!
-      user?: NexusGenInputs['userInput'] | null; // userInput
-    }
-    createUserArchive: { // args
-      mainUser: string; // ID!
-      userID: string; // ID!
+      input?: NexusGenInputs['userInput'] | null; // userInput
     }
     deleteCategory: { // args
       categoryID: string; // ID!
@@ -627,14 +584,9 @@ export interface NexusGenArgTypes {
       startDate: string; // String!
     }
     login: { // args
-      email: NexusGenScalars['EmailAddress']; // EmailAddress!
-      password: string; // String!
+      input?: NexusGenInputs['AuthInput'] | null; // AuthInput
     }
     resetUserPasswordToDefault: { // args
-      userID: string; // ID!
-    }
-    updateArchive: { // args
-      archiveID: string; // ID!
       userID: string; // ID!
     }
     updateCategory: { // args
@@ -682,8 +634,8 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    getAllArchiveByTab: { // args
-      tab?: NexusGenEnums['tab'] | null; // tab
+    getAllCategory: { // args
+      search?: string | null; // String
     }
     getAllExpense: { // args
       expFolderID: string; // ID!
@@ -691,8 +643,15 @@ export interface NexusGenArgTypes {
     getAllExpenseByGroup: { // args
       expFolderID: string; // ID!
     }
+    getAllExpenseFolder: { // args
+      search?: string | null; // String
+    }
     getAllOrderHistory: { // args
       dmy: string; // String!
+    }
+    getAllUserAccount: { // args
+      role?: NexusGenEnums['role'] | null; // role
+      search?: string | null; // String
     }
     getCategotiesById: { // args
       categoryID: string; // ID!
@@ -706,6 +665,7 @@ export interface NexusGenArgTypes {
     }
     getItemsByCategoryId: { // args
       categoryID: string; // ID!
+      search?: string | null; // String
     }
     getItemsById: { // args
       itemsID: string; // ID!
@@ -725,13 +685,7 @@ export interface NexusGenArgTypes {
     getProfileByUserId: { // args
       userID: string; // ID!
     }
-    getSearchByFolderName: { // args
-      search: string; // String!
-    }
     getSearchByUser: { // args
-      search: string; // String!
-    }
-    getSearchCategory: { // args
       search: string; // String!
     }
     getUserById: { // args
@@ -739,9 +693,6 @@ export interface NexusGenArgTypes {
     }
   }
   Subscription: {
-    archiveSubscriptions: { // args
-      tab?: NexusGenEnums['tab'] | null; // tab
-    }
     createItemSubscriptions: { // args
       categoryID: string; // ID!
     }
@@ -752,6 +703,8 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  AuthPayload: "ErrorObject" | "token"
+  UserPaylaod: "ErrorObject" | "user"
 }
 
 export interface NexusGenTypeInterfaces {
@@ -767,7 +720,7 @@ export type NexusGenInterfaceNames = never;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
-export type NexusGenUnionNames = never;
+export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
@@ -775,8 +728,8 @@ export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
+    resolveType: false
     isTypeOf: false
-    resolveType: true
     __typename: false
   }
 }

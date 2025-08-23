@@ -2,6 +2,13 @@
 ### Do not make changes to this file directly
 
 
+input AuthInput {
+  email: String
+  password: String
+}
+
+union AuthPayload = ErrorObject | token
+
 """
 A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -17,27 +24,26 @@ A field whose value conforms to the standard internet email address format as sp
 """
 scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
 
+type ErrorObject {
+  message: String
+}
+
 type Mutation {
   createAnOrder(orders: [orderInput]): order
   createCategory(category: String!, userID: ID!): category
-  createCategoryArchive(categoryID: ID!, userID: ID!): archive
   createExpense(expFolderID: ID!, expenses: expenseInput): expenses
   createExpenseFolder(exFolder: String!, userID: ID!): expenseFolder
-  createExpenseFolderArchive(expFolderID: ID!, userID: ID!): archive
-  createItemArchive(itemsID: ID!, userID: ID!): archive
   createMedicalItems(categoryID: ID!, items: itemInput, userID: ID!): item
   createNotificationSystem: notification
-  createUserAccount(role: role!, user: userInput): user
-  createUserArchive(mainUser: ID!, userID: ID!): archive
+  createUserAccount(input: userInput): UserPaylaod
   deleteCategory(categoryID: ID!, userID: ID!): category
   deleteExpFolder(expFolderID: ID!, userID: ID!): expenseFolder
   deleteExpense(expenseID: [ID]!): [expenses]
   deleteMedicalItem(itemsID: ID!, userID: ID!): item
   deleteUserAccount(main: ID!, userID: ID!): user
   generateOrderReport(endDate: String!, startDate: String!): [order]
-  login(email: EmailAddress!, password: String!): token
+  login(input: AuthInput): AuthPayload
   resetUserPasswordToDefault(userID: ID!): user
-  updateArchive(archiveID: ID!, userID: ID!): archive
   updateCategory(category: String!, categoryID: ID!, userID: ID!): category
   updateExpense(expenseID: ID!, expenses: expenseInput): expenses
   updateExpenseFolder(exFolder: String!, expFolderID: ID!, userID: ID!): expenseFolder
@@ -60,31 +66,28 @@ A field whose value conforms to the standard E.164 format as specified in: https
 scalar PhoneNumber
 
 type Query {
-  getAllArchiveByTab(tab: tab): [archive]
-  getAllCategory: [category]
+  getAllCategory(search: String): [category]
   getAllExpense(expFolderID: ID!): [expenses]
   getAllExpenseByGroup(expFolderID: ID!): [expenses]
-  getAllExpenseFolder: [expenseFolder]
+  getAllExpenseFolder(search: String): [expenseFolder]
   getAllNotification: [notification]
   getAllOrderHistory(dmy: String!): [OrderTotal]
   getAllOrders: [order]
   getAllStoreItems: [item]
   getAllUnreadNotification: [notification]
-  getAllUserAccount: [user]
+  getAllUserAccount(role: role, search: String): [user]
   getAllUserAccountManagerRole: [user]
   getCategotiesById(categoryID: ID!): [category]
   getCurrentOrdersBy20: [order]
   getExpenseFolderById(expFolderID: ID!): [expenseFolder]
   getItemBySearch(categoryID: ID!, search: ID!): [item]
-  getItemsByCategoryId(categoryID: ID!): [item]
+  getItemsByCategoryId(categoryID: ID!, search: String): [item]
   getItemsById(itemsID: ID!): [item]
   getItemsByStaff(search: String!): [item]
   getLogByUserId(offset: Int!, orders: String!, take: Int!, userID: ID!): [logs]
   getOrderById(orderID: ID!): [order]
   getProfileByUserId(userID: ID!): [profile]
-  getSearchByFolderName(search: String!): [expenseFolder]
   getSearchByUser(search: String!): [user]
-  getSearchCategory(search: String!): [category]
   getTotalNoOfItems: Int
   getTotalNoOfOrders: Int
   getTotalRevenue: Float
@@ -92,7 +95,6 @@ type Query {
 }
 
 type Subscription {
-  archiveSubscriptions(tab: tab): archive
   categorySubscriptions: category
   createItemSubscriptions(categoryID: ID!): item
   createOrders: order
@@ -101,16 +103,7 @@ type Subscription {
   expensesSubscriptions(expFolderID: ID!): expenses
 }
 
-type archive {
-  archive: Boolean
-  archiveID: ID
-  categories: [category]
-  createdAt: DateTime
-  expenseFolder: [expenseFolder]
-  items: [item]
-  updatedAt: DateTime
-  user: [user]
-}
+union UserPaylaod = ErrorObject | user
 
 type category {
   category: String
@@ -228,25 +221,19 @@ type store {
   storeInfoID: ID
 }
 
-enum tab {
-  category
-  expFolder
-  item
-  user
-}
-
 type token {
   token: String
+  user: user
 }
 
 type user {
   createdAt: DateTime
   email: EmailAddress
   logs: [logs]
-  myProfile: [profile]
+  myProfile: profile
   password: String
   role: String
-  salary: [salary]
+  salary: salary
   updatedAt: DateTime
   userID: ID
 }
@@ -257,5 +244,6 @@ input userInput {
   firstname: String
   lastname: String
   phone: PhoneNumber
+  role: String
   salary: Float
 }
