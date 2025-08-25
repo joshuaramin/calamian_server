@@ -96,7 +96,7 @@ export const UserMutation = extendType({
 
         pubsub.publish("createUser", users);
         return {
-          __typename: "users",
+          __typename: "user",
           ...users,
         };
       },

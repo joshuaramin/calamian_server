@@ -19,11 +19,11 @@ export const CategoryQuery = extendType({
         });
       },
     });
-    t.list.field("getCategotiesById", {
+    t.field("getCategotiesById", {
       type: "category",
       args: { categoryID: nonNull(idArg()) },
       resolve: async (_, { categoryID }): Promise<any> => {
-        return await prisma.category.findMany({
+        return await prisma.category.findFirst({
           where: {
             categoryID,
           },

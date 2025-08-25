@@ -16,7 +16,7 @@ export const itemQuery = extendType({
     });
     t.list.field("getItemBySearch", {
       type: "item",
-      args: { search: nonNull(idArg()), categoryID: nonNull(idArg()) },
+      args: { search: stringArg(), categoryID: nonNull(idArg()) },
       resolve: async (_, { search, categoryID }): Promise<any> => {
         return await prisma.items.findMany({
           where: {

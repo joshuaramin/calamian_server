@@ -77,17 +77,17 @@ type Query {
   getAllUnreadNotification: [notification]
   getAllUserAccount(role: role, search: String): [user]
   getAllUserAccountManagerRole: [user]
-  getCategotiesById(categoryID: ID!): [category]
+  getCategotiesById(categoryID: ID!): category
   getCurrentOrdersBy20: [order]
   getExpenseFolderById(expFolderID: ID!): [expenseFolder]
-  getItemBySearch(categoryID: ID!, search: ID!): [item]
+  getItemBySearch(categoryID: ID!, search: String): [item]
   getItemsByCategoryId(categoryID: ID!, search: String): [item]
   getItemsById(itemsID: ID!): [item]
   getItemsByStaff(search: String!): [item]
   getLogByUserId(offset: Int!, orders: String!, take: Int!, userID: ID!): [logs]
   getOrderById(orderID: ID!): [order]
-  getProfileByUserId(userID: ID!): [profile]
-  getSearchByUser(search: String!): [user]
+  getProfileByUserId(userID: ID!): profile
+  getTotal: total
   getTotalNoOfItems: Int
   getTotalNoOfOrders: Int
   getTotalRevenue: Float
@@ -224,6 +224,12 @@ type store {
 type token {
   token: String
   user: user
+}
+
+type total {
+  totalItems: Int
+  totalOrders: Int
+  totalRevenue: Float
 }
 
 type user {

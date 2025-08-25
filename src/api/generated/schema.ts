@@ -183,6 +183,11 @@ export interface NexusGenObjects {
     token?: string | null; // String
     user?: NexusGenRootTypes['user'] | null; // user
   }
+  total: { // root type
+    totalItems?: number | null; // Int
+    totalOrders?: number | null; // Int
+    totalRevenue?: number | null; // Float
+  }
   user: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     email?: NexusGenScalars['EmailAddress'] | null; // EmailAddress
@@ -251,7 +256,7 @@ export interface NexusGenFieldTypes {
     getAllUnreadNotification: Array<NexusGenRootTypes['notification'] | null> | null; // [notification]
     getAllUserAccount: Array<NexusGenRootTypes['user'] | null> | null; // [user]
     getAllUserAccountManagerRole: Array<NexusGenRootTypes['user'] | null> | null; // [user]
-    getCategotiesById: Array<NexusGenRootTypes['category'] | null> | null; // [category]
+    getCategotiesById: NexusGenRootTypes['category'] | null; // category
     getCurrentOrdersBy20: Array<NexusGenRootTypes['order'] | null> | null; // [order]
     getExpenseFolderById: Array<NexusGenRootTypes['expenseFolder'] | null> | null; // [expenseFolder]
     getItemBySearch: Array<NexusGenRootTypes['item'] | null> | null; // [item]
@@ -260,8 +265,8 @@ export interface NexusGenFieldTypes {
     getItemsByStaff: Array<NexusGenRootTypes['item'] | null> | null; // [item]
     getLogByUserId: Array<NexusGenRootTypes['logs'] | null> | null; // [logs]
     getOrderById: Array<NexusGenRootTypes['order'] | null> | null; // [order]
-    getProfileByUserId: Array<NexusGenRootTypes['profile'] | null> | null; // [profile]
-    getSearchByUser: Array<NexusGenRootTypes['user'] | null> | null; // [user]
+    getProfileByUserId: NexusGenRootTypes['profile'] | null; // profile
+    getTotal: NexusGenRootTypes['total'] | null; // total
     getTotalNoOfItems: number | null; // Int
     getTotalNoOfOrders: number | null; // Int
     getTotalRevenue: number | null; // Float
@@ -357,6 +362,11 @@ export interface NexusGenFieldTypes {
     token: string | null; // String
     user: NexusGenRootTypes['user'] | null; // user
   }
+  total: { // field return type
+    totalItems: number | null; // Int
+    totalOrders: number | null; // Int
+    totalRevenue: number | null; // Float
+  }
   user: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     email: NexusGenScalars['EmailAddress'] | null; // EmailAddress
@@ -426,7 +436,7 @@ export interface NexusGenFieldTypeNames {
     getLogByUserId: 'logs'
     getOrderById: 'order'
     getProfileByUserId: 'profile'
-    getSearchByUser: 'user'
+    getTotal: 'total'
     getTotalNoOfItems: 'Int'
     getTotalNoOfOrders: 'Int'
     getTotalRevenue: 'Float'
@@ -521,6 +531,11 @@ export interface NexusGenFieldTypeNames {
   token: { // field return type name
     token: 'String'
     user: 'user'
+  }
+  total: { // field return type name
+    totalItems: 'Int'
+    totalOrders: 'Int'
+    totalRevenue: 'Float'
   }
   user: { // field return type name
     createdAt: 'DateTime'
@@ -661,7 +676,7 @@ export interface NexusGenArgTypes {
     }
     getItemBySearch: { // args
       categoryID: string; // ID!
-      search: string; // ID!
+      search?: string | null; // String
     }
     getItemsByCategoryId: { // args
       categoryID: string; // ID!
@@ -684,9 +699,6 @@ export interface NexusGenArgTypes {
     }
     getProfileByUserId: { // args
       userID: string; // ID!
-    }
-    getSearchByUser: { // args
-      search: string; // String!
     }
     getUserById: { // args
       userID: string; // ID!
