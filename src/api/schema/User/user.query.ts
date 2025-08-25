@@ -50,29 +50,12 @@ export const UserQuery = extendType({
         });
       },
     });
-    t.list.field("getUserById", {
+    t.field("getUserById", {
       type: "user",
       args: { userID: nonNull(idArg()) },
       resolve: async (_, { userID }): Promise<any> => {
-        return await prisma.user.findMany({
+        return await prisma.user.findFirst({
           where: { userID },
-        });
-      },
-    });
-    t.list.field("getSearchByUser", {
-      type: "user",
-      args: { search: nonNull(stringArg()) },
-      resolve: async (_, { search }): Promise<any> => {
-        return await prisma.user.findMany({
-          where: {
-            is_deleted: false,
-            Profile: {
-              firstname: {
-                contains: search,
-                mode: "insensitive",
-              },
-            },
-          },
         });
       },
     });

@@ -265,7 +265,7 @@ export interface NexusGenFieldTypes {
     getTotalNoOfItems: number | null; // Int
     getTotalNoOfOrders: number | null; // Int
     getTotalRevenue: number | null; // Float
-    getUserById: Array<NexusGenRootTypes['user'] | null> | null; // [user]
+    getUserById: NexusGenRootTypes['user'] | null; // user
   }
   Subscription: { // field return type
     categorySubscriptions: NexusGenRootTypes['category'] | null; // category

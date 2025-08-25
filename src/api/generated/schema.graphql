@@ -91,7 +91,7 @@ type Query {
   getTotalNoOfItems: Int
   getTotalNoOfOrders: Int
   getTotalRevenue: Float
-  getUserById(userID: ID!): [user]
+  getUserById(userID: ID!): user
 }
 
 type Subscription {
